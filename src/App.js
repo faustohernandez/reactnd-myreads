@@ -1,33 +1,30 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
+import { Link } from 'react-router-dom'
 import { Route } from 'react-router-dom'
 import ListBooks from './ListBooks'
 import SearchBooks from './SearchBooks'
 
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false,
-    booksRead: [],
-    booksReading: [],
-    booksWant: [],
     books:[]
   }
 
-  handleShelfChange = (book, shelf) => {
-    if (this.isNewBook(book)) {
-      this.addBook(book, shelf);
-    } else {
-      this.updateBook(book, shelf);
-    }
-
-    BooksAPI.update(book, shelf);
+  onShelfChange = (book,shelf) => {
+    BooksAPI.update(book,shelf)
+      .then(
+        this.setState((state) => (
+          {books: state.books.map(b => {
+            if (b.title === book.title){
+              b.shelf = shelf;
+              return b
+            } else {
+              return b
+            }
+          })
+         }))
+      )
   }
 
   componentDidMount() {
@@ -37,14 +34,41 @@ class BooksApp extends React.Component {
   }
 
   render() {
+    const state = this.state.books
+    const wantToRead = state.filter((book) => book.shelf === 'wantToRead')
+    const read = state.filter((book) => book.shelf === 'read')
+    const currentlyReading = state.filter((book) => book.shelf === 'currentlyReading')
+
     return (
       <div className="app">
-        <Route exact path="/" render={ () => (
-        <ListBooks/>
+        <Route exact path="/" render={() => (
+                <div className="list-books">
+                    <div className="list-books-title">
+                        <h1>MyReads</h1>
+                    </div>
+                    <div className="list-books-content">
+                        <ListBooks
+                        currentlyReading={currentlyReading}
+                        wantToRead={wantToRead}
+                        read={read}
+                        onShelfChange={this.onShelfChange}
+                        />
+                    </div>
+                    <div className="open-search">
+                            <Link to="/search">
+                            </Link>
+                    </div>
+                </div>
         )}/>
-        <Route path="/search" render={({ history })=> (
-          <SearchBooks/>
+
+        <Route exact path="/search" render={({ history })=> (
+           <SearchBooks books={currentlyReading.concat(wantToRead,read)}           
+          onShelfChange={(book,shelf) => {
+              this.onShelfChange(book,shelf)
+              }}
+           />
         )}/>
+        
       </div>
     )
   }
