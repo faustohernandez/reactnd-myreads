@@ -18,18 +18,26 @@ There are two main pages associated with this app: your bookshelf and the search
 
 1. Bookshelf
    -Your book shelf displays your books read, the books you are currently reading, and the books you would like to read.
+   
    -Each book listed has a green button which allows you to move your books from one shelf to the other
-      -Currently reading: used to designate that this book is one that you are currently reading
-      -Want to read: used to designate that this book is one that you want to read
-      -Read: used to designate that this book is one that you have read
-      -None: used to remove a book from the Bookself
+   
+       -Currently reading: used to designate that this book is one that you are currently reading
+      
+       -Want to read: used to designate that this book is one that you want to read
+      
+       -Read: used to designate that this book is one that you have read
+      
+       -None: used to remove a book from the Bookself
+      
    -To go from the Bookshelf page to the Search page, click on the green arrow at the bottom right of the page
     
    
 2. Search
 
    -Type the Title or Author of the desired book
+   
    -Use the green button to select the most appropriate option for the book in question. Options are listed above as part of        the Bookshelf section.
+   
    -To go from the Search Page to the Bookshelf, click the back arrow on the top left of the page next to the search bar.   
    
    
