@@ -29,7 +29,7 @@ There are two main pages associated with this app: your bookshelf and the search
       
        -None: used to remove a book from the Bookself
       
-   -To go from the Bookshelf page to the Search page, click on the green arrow at the bottom right of the page
+   -To go from the Bookshelf page to the Search page, click on the green cross at the bottom right of the page
     
    
 2. Search
