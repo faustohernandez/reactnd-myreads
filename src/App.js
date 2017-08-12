@@ -8,7 +8,8 @@ import SearchBooks from './SearchBooks'
 
 class BooksApp extends React.Component {
   state = {
-    books:[]
+    books:[],
+    searchResults:[]
   }
 
   onShelfChange = (book,shelf) => {
@@ -22,8 +23,18 @@ class BooksApp extends React.Component {
             } else {
               return b
             }
+          }),
+         searchResults: state.searchResults.map(b => {
+            if (b.title === book.title){
+              b.shelf = shelf;
+              return b
+            } else {
+              return b
+            }
           })
-         }))
+         }
+      
+        ))
       )
   }
 
@@ -31,6 +42,28 @@ class BooksApp extends React.Component {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
     })
+  }
+
+  search = (e) => {    
+      const query = e.target.value
+      if (!query) {
+          this.setState({searchResults: []});
+          return;
+      }
+          BooksAPI.search(query, 20).then(searchResults => {
+          if (searchResults.error) {
+              searchResults = [];
+          }
+          searchResults = searchResults.map(book => {
+              const bookInShelf = this.state.books.find(b => b.id === book.id);
+                if (bookInShelf) {
+                    book.shelf = bookInShelf.shelf;
+                }
+              return book
+          })
+          this.setState({searchResults})
+      }
+    )
   }
 
   render() {
@@ -61,11 +94,11 @@ class BooksApp extends React.Component {
                 </div>
         )}/>
 
-        <Route exact path="/search" render={({ history })=> (
-           <SearchBooks books={currentlyReading.concat(wantToRead,read)}           
-          onShelfChange={(book,shelf) => {
-              this.onShelfChange(book,shelf)
-              }}
+          <Route exact path="/search" render={()=> (
+           <SearchBooks 
+              onShelfChange={this.onShelfChange}
+              onSearchBook={this.search}
+              searchResults={this.state.searchResults}
            />
         )}/>
         
