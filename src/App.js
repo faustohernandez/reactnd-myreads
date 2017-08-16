@@ -9,38 +9,39 @@ import SearchBooks from './SearchBooks'
 class BooksApp extends React.Component {
   state = {
     books:[],
-    searchResults:[]
+    searchResults: []
   }
 
-  onShelfChange = (book,shelf) => {
-    BooksAPI.update(book,shelf)
-      .then(
-        this.setState((state) => (
-          {books: state.books.map(b => {
-            if (b.title === book.title){
-              b.shelf = shelf;
-              return b
-            } else {
-              return b
-            }
-          }),
-         searchResults: state.searchResults.map(b => {
-            if (b.title === book.title){
-              b.shelf = shelf;
-              return b
-            } else {
-              return b
-            }
-          })
-         }
-      
-        ))
-      )
-  }
+  onShelfChange = (book, shelf) => {
+      if (book.shelf !== shelf) {   // check if the book returned is on the shelf
+        BooksAPI.update(book, shelf).then(() => {
+            // Set book's shelf to the selected shelf from the drop down menu
+            book.shelf = shelf
+          //  Filter out updated book, the concat to current state (array) to trigger a DOM rerender 
+          const otherBooks = this.state.books.filter((b) => b.id !== book.id)
+          //put the book with the new shelf back in
+          this.setState({books: otherBooks.concat(book)})
+
+          //update search results too          
+       }).then( () => { //look for this book to see if it exist in the search page
+         if(this.state.searchResults.find(bo => bo.id === book.id)) {
+           //update the state of the search result if the bookshelf state is updated
+            this.setState( {searchResults: this.state.searchResults.map(b => {
+                  if (b.id === book.id){
+                    b.shelf = shelf;
+                    return b
+                  } else {
+                    return b
+                  }
+                })})}
+       }
+       )
+    }
+}
 
   componentDidMount() {
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books })
+    BooksAPI.getAll().then((books) => { //get initial state
+      this.setState({ books: books, searchResults: []})
     })
   }
 
@@ -54,9 +55,9 @@ class BooksApp extends React.Component {
           if (searchResults.error) {
               searchResults = [];
           }
-          searchResults = searchResults.map(book => {
+          searchResults = searchResults.map(book => { //go through the search results to find books already in the bookshelf
               const bookInShelf = this.state.books.find(b => b.id === book.id);
-                if (bookInShelf) {
+                if (bookInShelf) { //insert the shelf state to the search result books that are already in the bookshelf
                     book.shelf = bookInShelf.shelf;
                 }
               return book

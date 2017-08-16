@@ -1,11 +1,8 @@
-import React, {Component} from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom' 
 import Book from './Book'
 
-
-class SearchBooks extends Component {        
-
-    render() {
+const SearchBooks = ({onShelfChange, onSearchBook, searchResults}) => {        
 
         return (
                 <div className="search-books">
@@ -16,21 +13,20 @@ class SearchBooks extends Component {
                             >Close</Link>
                     
                     <div className="search-books-input-wrapper">
-                    <input type="text" placeholder="Search by title or author" onChange={this.props.onSearchBook}/>
+                    <input type="text" placeholder="Search by title or author" onChange={onSearchBook}/>
                     </div>
                     </div>
                     <div className="search-books-results">
                     <ol className="books-grid">
-                        {this.props.searchResults && this.props.searchResults.map(book => (
+                        {searchResults && searchResults.map(book => (
                                 <li key={book.id}>
-                                    <Book book={book} onShelfChange={this.props.onShelfChange}/>
+                                    <Book book={book} onShelfChange={onShelfChange}/>
                                 </li>
                         ))}
                     </ol>
                     </div>
                 </div>
-        )
-    }
+                    )
 }
 
 export default SearchBooks

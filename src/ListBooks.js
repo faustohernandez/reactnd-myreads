@@ -1,16 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react'
 import BookShelf from './BookShelf'
 
-class ListBooks extends Component {
-  render () {
+const ListBooks =({currentlyReading, wantToRead, read, onShelfChange}) => {
+    
     return (
       <div>
-        <BookShelf title="Currently Reading" books={this.props.currentlyReading} onShelfChange={this.props.onShelfChange}/>
-        <BookShelf title="Want To Read" books={this.props.wantToRead} onShelfChange={this.props.onShelfChange}/>
-        <BookShelf title="Read" books={this.props.read} onShelfChange={this.props.onShelfChange}/>
+        <BookShelf title="Currently Reading" books={currentlyReading} onShelfChange={onShelfChange}/>
+        <BookShelf title="Want To Read" books={wantToRead} onShelfChange={onShelfChange}/>
+        <BookShelf title="Read" books={read} onShelfChange={onShelfChange}/>
       </div>
-    )
-  }
+    )  
 }
 
 export default ListBooks

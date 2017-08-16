@@ -6,7 +6,7 @@ class Book extends Component {
       const shelf = e.target.options[e.target.selectedIndex].value;
       this.props.onShelfChange(this.props.book, shelf);
   }
-
+  
   render () {
     return (
       <div>
